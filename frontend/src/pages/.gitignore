@@ -1,26 +1,69 @@
-# Environment variables
-.env
-.env.*
+# 🚀 VentureMind AI
 
-# Python
-venv/
-.venv/
-__pycache__/
-*.pyc
-*.pyo
+> AI-powered business idea validation and analysis platform built with React, FastAPI, Python, and Google Gemini.
 
-# Node
-node_modules/
-dist/
-build/
+VentureMind AI helps entrepreneurs evaluate startup ideas using Generative AI. Users provide information about their business idea, and the platform generates a structured business analysis with actionable recommendations.
 
-# IDE
-.vscode/
-.idea/
+## ✨ Features
 
-# OS
-.DS_Store
-Thumbs.db
+- 🤖 AI-powered business idea analysis
+- 📊 Business viability score
+- 💪 Strengths analysis
+- ⚠️ Weakness analysis
+- 🌱 Opportunities identification
+- 🚨 Threat analysis
+- 🎯 Target market insights
+- 🏆 Competitor insights
+- 💰 Revenue strategy
+- 📈 Growth strategy
+- 💵 Funding readiness
+- 🗺️ Business roadmap
+- 💡 AI-generated recommendations
+- 📱 Responsive user interface
+- 🔌 FastAPI REST API
+- 📖 Interactive Swagger API documentation
 
-# Archives
-*.zip
+## 🛠️ Tech Stack
+
+### Frontend
+- React
+- TypeScript
+- CSS
+- Axios
+- Vite
+
+### Backend
+- Python
+- FastAPI
+- Pydantic
+
+### AI
+- Google Gemini API
+- Gemini 2.5 Flash
+
+### Tools
+- Git
+- GitHub
+- VS Code
+- Python Virtual Environment
+
+## 🏗️ System Architecture
+
+```text
+User
+  ↓
+React Frontend
+  ↓
+Axios
+  ↓
+FastAPI Backend
+  ↓
+AI Service
+  ↓
+Google Gemini API
+  ↓
+Structured JSON Response
+  ↓
+React Results Page
+  ↓
+Business Analysis Report

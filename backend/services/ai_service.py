@@ -36,41 +36,42 @@ Return ONLY valid JSON.
 Use exactly this structure:
 
 {{
-    "score": 85,
-    "summary": "A short overall evaluation of the business idea.",
-    "market_analysis": "Analysis of the market opportunity and demand.",
-    "target_audience": "Analysis of the target customers.",
-    "strengths": [
-        "Strength 1",
-        "Strength 2",
-        "Strength 3"
-    ],
-    "weaknesses": [
-        "Weakness 1",
-        "Weakness 2"
-    ],
-    "opportunities": [
-        "Opportunity 1",
-        "Opportunity 2"
-    ],
-    "threats": [
-        "Threat 1",
-        "Threat 2"
-    ],
-    "revenue_strategy": "Recommended revenue model and monetization strategy.",
-    "competitor_analysis": "General competitor and competitive landscape analysis.",
-    "growth_strategy": "Recommended strategy for acquiring customers and growing.",
-    "funding_readiness": "Assessment of whether the idea appears ready for funding.",
-    "roadmap": [
-        "First important step",
-        "Second important step",
-        "Third important step",
-        "Fourth important step"
-    ],
-    "recommendation": "Final recommendation for the entrepreneur."
+"score": 85,
+"summary": "A short overall evaluation of the business idea.",
+"market_analysis": "Analysis of the market opportunity and demand.",
+"target_audience": "Analysis of the target customers.",
+"strengths": [
+"Strength 1",
+"Strength 2",
+"Strength 3"
+],
+"weaknesses": [
+"Weakness 1",
+"Weakness 2"
+],
+"opportunities": [
+"Opportunity 1",
+"Opportunity 2"
+],
+"threats": [
+"Threat 1",
+"Threat 2"
+],
+"revenue_strategy": "Recommended revenue model and monetization strategy.",
+"competitor_analysis": "General competitor and competitive landscape analysis.",
+"growth_strategy": "Recommended strategy for acquiring customers and growing.",
+"funding_readiness": "Assessment of whether the idea appears ready for funding.",
+"roadmap": [
+"First important step",
+"Second important step",
+"Third important step",
+"Fourth important step"
+],
+"recommendation": "Final recommendation for the entrepreneur."
 }}
 
 Important rules:
+
 - score must be a number from 0 to 100.
 - Return JSON only.
 - Do NOT use markdown.
@@ -78,19 +79,46 @@ Important rules:
 - Do NOT add explanations outside the JSON.
 """
 
-    response = client.models.generate_content(
-        model="gemini-3.6-flash",
-        contents=prompt,
-    )
+    # Handle Gemini/API errors
+    try:
+        response = client.models.generate_content(
+            model="gemini-3.6-flash",
+            contents=prompt,
+        )
 
-    text = response.text.strip()
+        text = response.text.strip()
 
+    except Exception as e:
+        print(f"Gemini API Error: {e}")
+
+        return {
+            "score": 0,
+            "summary": "Unable to analyze the business idea at the moment.",
+            "market_analysis": "",
+            "target_audience": "",
+            "strengths": [],
+            "weaknesses": [],
+            "opportunities": [],
+            "threats": [],
+            "revenue_strategy": "",
+            "competitor_analysis": "",
+            "growth_strategy": "",
+            "funding_readiness": "",
+            "roadmap": [],
+            "recommendation": "Please try again later."
+        }
+
+    # Clean possible markdown formatting
     if text.startswith("```"):
         text = text.replace("```json", "").replace("```", "").strip()
 
+    # Handle invalid JSON
     try:
         return json.loads(text)
+
     except json.JSONDecodeError:
+        print("Gemini returned invalid JSON.")
+
         return {
             "score": 0,
             "summary": "The AI returned an unexpected response format.",

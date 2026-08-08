@@ -77,7 +77,7 @@ const BusinessIdeaPage: React.FC = () => {
 
     try {
       const response = await axios.post<AnalysisResult>(
-        "http://127.0.0.1:8000/analyze",
+        "https://venturemind-ai-fo6t.onrender.com",
         {
           title: formData.businessName,
           description: `
