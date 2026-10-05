@@ -55,6 +55,7 @@ const industries = [
 const BusinessIdeaPage: React.FC = () => {
   const [formData, setFormData] = useState<FormData>(initialForm);
   const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const handleChange = (
@@ -77,9 +78,10 @@ const BusinessIdeaPage: React.FC = () => {
 
     try {
       const response = await axios.post<AnalysisResult>(
-        "https://venturemind-ai-fo6t.onrender.com",
+        "http://127.0.0.1:8000/analyze",
         {
           title: formData.businessName,
+
           description: `
 Industry: ${formData.industry}
 
@@ -95,6 +97,7 @@ ${formData.revenueModel}
 Additional Notes:
 ${formData.additionalNotes}
           `,
+
           target_market: formData.targetAudience,
         }
       );
@@ -113,6 +116,7 @@ ${formData.additionalNotes}
 
       if (axios.isAxiosError(error)) {
         console.error("Backend response:", error.response?.data);
+        console.error("Status:", error.response?.status);
       }
 
       alert(
@@ -128,24 +132,38 @@ ${formData.additionalNotes}
       {loading && (
         <div className="vm-loading-overlay">
           <div className="vm-spinner" />
+
           <p>Analyzing your business idea with AI...</p>
-          <span>Please wait while Gemini prepares your report.</span>
+
+          <span>
+            Please wait while Gemini prepares your report.
+          </span>
         </div>
       )}
 
       <div className="vm-idea-container">
+
         <div className="vm-idea-header">
           <h1>Analyze Your Business Idea</h1>
+
           <p>
             Describe your startup idea and let AI evaluate its business
             potential.
           </p>
         </div>
 
-        <form className="vm-idea-form" onSubmit={handleSubmit}>
+        <form
+          className="vm-idea-form"
+          onSubmit={handleSubmit}
+        >
+
           <div className="vm-form-grid">
+
             <div className="vm-form-group">
-              <label htmlFor="businessName">Business Name</label>
+
+              <label htmlFor="businessName">
+                Business Name
+              </label>
 
               <input
                 id="businessName"
@@ -156,10 +174,14 @@ ${formData.additionalNotes}
                 onChange={handleChange}
                 required
               />
+
             </div>
 
             <div className="vm-form-group">
-              <label htmlFor="industry">Industry</label>
+
+              <label htmlFor="industry">
+                Industry
+              </label>
 
               <select
                 id="industry"
@@ -168,21 +190,31 @@ ${formData.additionalNotes}
                 onChange={handleChange}
                 required
               >
+
                 <option value="" disabled>
                   Select an industry
                 </option>
 
                 {industries.map((industry) => (
-                  <option key={industry} value={industry}>
+                  <option
+                    key={industry}
+                    value={industry}
+                  >
                     {industry}
                   </option>
                 ))}
+
               </select>
+
             </div>
+
           </div>
 
           <div className="vm-form-group">
-            <label htmlFor="targetAudience">Target Audience</label>
+
+            <label htmlFor="targetAudience">
+              Target Audience
+            </label>
 
             <input
               id="targetAudience"
@@ -193,10 +225,14 @@ ${formData.additionalNotes}
               onChange={handleChange}
               required
             />
+
           </div>
 
           <div className="vm-form-group">
-            <label htmlFor="problemStatement">Problem Statement</label>
+
+            <label htmlFor="problemStatement">
+              Problem Statement
+            </label>
 
             <textarea
               id="problemStatement"
@@ -207,9 +243,11 @@ ${formData.additionalNotes}
               onChange={handleChange}
               required
             />
+
           </div>
 
           <div className="vm-form-group">
+
             <label htmlFor="solutionDescription">
               Solution Description
             </label>
@@ -223,10 +261,14 @@ ${formData.additionalNotes}
               onChange={handleChange}
               required
             />
+
           </div>
 
           <div className="vm-form-group">
-            <label htmlFor="revenueModel">Revenue Model</label>
+
+            <label htmlFor="revenueModel">
+              Revenue Model
+            </label>
 
             <input
               id="revenueModel"
@@ -237,10 +279,14 @@ ${formData.additionalNotes}
               onChange={handleChange}
               required
             />
+
           </div>
 
           <div className="vm-form-group">
-            <label htmlFor="additionalNotes">Additional Notes</label>
+
+            <label htmlFor="additionalNotes">
+              Additional Notes
+            </label>
 
             <textarea
               id="additionalNotes"
@@ -250,6 +296,7 @@ ${formData.additionalNotes}
               value={formData.additionalNotes}
               onChange={handleChange}
             />
+
           </div>
 
           <button
@@ -257,9 +304,13 @@ ${formData.additionalNotes}
             className="vm-analyze-btn"
             disabled={loading}
           >
-            {loading ? "Analyzing..." : "Analyze Business Idea"}
+            {loading
+              ? "Analyzing..."
+              : "Analyze Business Idea"}
           </button>
+
         </form>
+
       </div>
     </div>
   );
