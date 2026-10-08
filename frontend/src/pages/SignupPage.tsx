@@ -3,23 +3,39 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import "./LoginPage.css";
 
-const LoginPage: React.FC = () => {
+const SignupPage: React.FC = () => {
   const navigate = useNavigate();
 
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (password !== confirmPassword) {
+      alert("Passwords do not match.");
+      return;
+    }
+
+    if (password.length < 6) {
+      alert("Password must be at least 6 characters.");
+      return;
+    }
+
     setLoading(true);
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: {
+          full_name: name,
+        },
+      },
     });
 
     setLoading(false);
@@ -29,71 +45,65 @@ const LoginPage: React.FC = () => {
       return;
     }
 
-    navigate("/dashboard");
-  };
+    alert(
+      "Account created successfully! Please check your email to verify your account."
+    );
 
-  const handleForgotPassword = async (
-    e: React.MouseEvent<HTMLAnchorElement>
-  ) => {
-    e.preventDefault();
-
-    if (!email) {
-      alert("Enter your email address first.");
-      return;
-    }
-
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: window.location.origin + "/reset-password",
-    });
-
-    if (error) {
-      alert(error.message);
-      return;
-    }
-
-    alert("Password reset link has been sent to your email.");
-  };
-
-  const handleGoogleLogin = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: window.location.origin + "/dashboard",
-      },
-    });
-
-    if (error) {
-      alert(error.message);
-    }
+    navigate("/login");
   };
 
   return (
     <div className="vm-login-page">
+
+      {/* Left Panel */}
       <div className="vm-login-left">
         <div className="vm-login-brand">
           VentureMind <span>AI</span>
         </div>
 
         <div className="vm-login-welcome">
-          <h1>Welcome Back</h1>
+          <h1>Join VentureMind AI</h1>
 
           <p>
-            Sign in to continue validating your business ideas with
-            AI-powered insights, market analysis, and growth strategies.
+            Create your account and start validating your business ideas
+            with AI-powered insights, market analysis, and growth strategies.
           </p>
         </div>
       </div>
 
+      {/* Right Panel */}
       <div className="vm-login-right">
-        <form className="vm-login-form" onSubmit={handleSubmit}>
-          <h2>Login to Your Account</h2>
+        <form
+          className="vm-login-form"
+          onSubmit={handleSubmit}
+        >
+          <h2>Create Your Account</h2>
 
           <p className="vm-login-subtext">
-            Enter your credentials to access your dashboard
+            Sign up to start validating your business ideas
           </p>
 
+          {/* Name */}
           <div className="vm-form-group">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="name">
+              Full Name
+            </label>
+
+            <input
+              id="name"
+              type="text"
+              placeholder="Your name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </div>
+
+          {/* Email */}
+          <div className="vm-form-group">
+            <label htmlFor="email">
+              Email
+            </label>
 
             <input
               id="email"
@@ -105,8 +115,11 @@ const LoginPage: React.FC = () => {
             />
           </div>
 
+          {/* Password */}
           <div className="vm-form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">
+              Password
+            </label>
 
             <div className="vm-password-wrapper">
               <input
@@ -128,62 +141,51 @@ const LoginPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="vm-form-row">
-            <label className="vm-checkbox-label">
-              <input
-                type="checkbox"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-              />
-
-              <span>Remember Me</span>
+          {/* Confirm Password */}
+          <div className="vm-form-group">
+            <label htmlFor="confirmPassword">
+              Confirm Password
             </label>
 
-            <a
-              href="#"
-              className="vm-forgot-link"
-              onClick={handleForgotPassword}
-            >
-              Forgot Password?
-            </a>
+            <input
+              id="confirmPassword"
+              type={showPassword ? "text" : "password"}
+              placeholder="••••••••"
+              value={confirmPassword}
+              onChange={(e) =>
+                setConfirmPassword(e.target.value)
+              }
+              required
+            />
           </div>
 
+          {/* Sign Up */}
           <button
             type="submit"
             className="vm-btn vm-btn-primary vm-btn-full"
             disabled={loading}
           >
-            {loading ? "Logging in..." : "Login"}
+            {loading ? "Creating Account..." : "Create Account"}
           </button>
 
-          <div className="vm-divider">
-            <span>or</span>
-          </div>
-
-          <button
-            type="button"
-            className="vm-btn vm-btn-google vm-btn-full"
-            onClick={handleGoogleLogin}
-          >
-            Continue with Google
-          </button>
-
+          {/* Login */}
           <p className="vm-signup-text">
-            Don't have an account?{" "}
+            Already have an account?{" "}
             <a
               href="#"
               onClick={(e) => {
                 e.preventDefault();
-                navigate("/signup");
+                navigate("/login");
               }}
             >
-              Sign Up
+              Login
             </a>
           </p>
+
         </form>
       </div>
     </div>
   );
 };
 
-export default LoginPage;
+export default SignupPage;
